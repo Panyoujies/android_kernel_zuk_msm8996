@@ -545,13 +545,21 @@ module_param_named(
 	int, S_IRUSR | S_IWUSR
 );
 
+#ifdef CONFIG_QPNP_SMBCHARGER_HW
 static int smbchg_default_hvdcp3_icl_ma = 1900;
+#else
+static int smbchg_default_hvdcp3_icl_ma = 3000;
+#endif
 module_param_named(
 	default_hvdcp3_icl_ma, smbchg_default_hvdcp3_icl_ma,
 	int, S_IRUSR | S_IWUSR
 );
 
+#ifdef CONFIG_QPNP_SMBCHARGER_HW
 static int smbchg_default_dcp_icl_ma = 2000;
+#else
+static int smbchg_default_dcp_icl_ma = 2500;
+#endif
 module_param_named(
 	default_dcp_icl_ma, smbchg_default_dcp_icl_ma,
 	int, S_IRUSR | S_IWUSR
@@ -3372,13 +3380,20 @@ static void smbchg_request_ns_charger_monitor(struct smbchg_chip *chip)
 #define NSC_USBIN_UV		4760000
 #define HVDCP_DP_DM_UV		3200000
 
+#ifdef CONFIG_QPNP_SMBCHARGER_HW
 #define	NSC_MAX_CURRENT_LEVEL		4
+#else
+#define	NSC_MAX_CURRENT_LEVEL		5
+#endif
 
 static const int nsc_icl_table[] = {
 	500,
 	900,
 	1500,
 	2000,
+#ifndef CONFIG_QPNP_SMBCHARGER_HW
+	2500,
+#endif
 };
 
 static long long smbchg_get_avg_data(long long data[10])
@@ -7593,7 +7608,8 @@ static int smbchg_hw_init(struct smbchg_chip *chip)
 	}
 
 	rc = smbchg_sec_masked_write(chip, chip->misc_base + TRIM_OPTIONS_7_0,
-			INPUT_MISSING_POLLER_EN_BIT, INPUT_MISSING_POLLER_EN_BIT);
+			INPUT_MISSING_POLLER_EN_BIT,
+			INPUT_MISSING_POLLER_EN_BIT);
 	if (rc < 0) {
 		dev_err(chip->dev, "Couldn't enable input missing poller rc=%d\n",
 				rc);
