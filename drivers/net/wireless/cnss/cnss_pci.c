@@ -1133,39 +1133,6 @@ int cnss_get_fw_files(struct cnss_fw_files *pfw_files)
 }
 EXPORT_SYMBOL(cnss_get_fw_files);
 
-int cnss_get_fw_files_for_target(struct cnss_fw_files *pfw_files,
-					u32 target_type, u32 target_version)
-{
-	if (!pfw_files)
-		return -ENODEV;
-
-	switch (target_version) {
-	case AR6320_REV1_VERSION:
-	case AR6320_REV1_1_VERSION:
-		memcpy(pfw_files, &FW_FILES_QCA6174_FW_1_1, sizeof(*pfw_files));
-		break;
-	case AR6320_REV1_3_VERSION:
-		memcpy(pfw_files, &FW_FILES_QCA6174_FW_1_3, sizeof(*pfw_files));
-		break;
-	case AR6320_REV2_1_VERSION:
-		memcpy(pfw_files, &FW_FILES_QCA6174_FW_2_0, sizeof(*pfw_files));
-		break;
-	case AR6320_REV3_VERSION:
-	case AR6320_REV3_2_VERSION:
-		memcpy(pfw_files, &FW_FILES_QCA6174_FW_3_0, sizeof(*pfw_files));
-		break;
-	default:
-		memcpy(pfw_files, &FW_FILES_DEFAULT, sizeof(*pfw_files));
-		pr_err("%s version mismatch 0x%X 0x%X",
-				__func__, target_type, target_version);
-		break;
-	}
-	return 0;
-}
-EXPORT_SYMBOL(cnss_get_fw_files_for_target);
-
-=======
->>>>>>> bbbf859... net: cnss: Add support to get fw files for QCA SDIO target
 #ifdef CONFIG_CNSS_SECURE_FW
 static void cnss_wlan_fw_mem_alloc(struct pci_dev *pdev)
 {
